@@ -28,6 +28,8 @@ public class App {
     static final Path CSV_FILE = Path.of("facts.csv");
     static final String DB_URL = "jdbc:sqlite:catfacts.db";
 
+    // everything is public
+    // like getters and setters
     record CatFact(int id, String fact) {}
     record NewFact(String fact) {}
     record ErrorBody(String error) {}
