@@ -1,10 +1,3 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -12,8 +5,25 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 
 /**
  * Cat Facts API, backed by a CSV file.
@@ -124,8 +134,32 @@ public class App {
         }
 
         /** GET /facts */
-        void getAllFacts(HttpExchange exchange) throws IOException {
-            sendJson(exchange, 200, facts);
+        void getAllFacts(HttpExchange exchange) throws IOException, SQLException {
+
+            // create an empty List<CatFact> 
+            List<CatFact> newFactList = new ArrayList<>();
+
+            String sql = "SELECT id, fact FROM facts ORDER BY id";
+            // need to create the connection of pass it into the parameter for getAllFacts?
+            try (Connection conn = DriverManager.getConnection(DB_URL);
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
+
+                System.out.println("Within our getAllFacts method");
+                
+                while (rs.next())
+                {
+                    newFactList.add(new CatFact(rs.getInt("id"), rs.getString("fact")));
+                }
+
+            } catch (SQLException error)
+            {
+                error.printStackTrace();
+            }
+            // return newFactList;
+            sendJson(exchange, 200, newFactList);
+
+
         }
 
         /** GET /facts/{id} */
