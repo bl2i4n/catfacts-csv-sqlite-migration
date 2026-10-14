@@ -97,7 +97,7 @@ public class App {
         }
 
         /** Decides which endpoint a request is for. */
-        void route(HttpExchange exchange) throws IOException {
+        void route(HttpExchange exchange) throws IOException, SQLException {
             String method = exchange.getRequestMethod();
             String path = exchange.getRequestURI().getPath();
 
