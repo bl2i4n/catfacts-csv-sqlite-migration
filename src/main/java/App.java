@@ -12,11 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -239,6 +234,39 @@ public class App {
 
             exchange.getResponseHeaders().set("Location", "/facts/" + created.id());
             sendJson(exchange, 201, created);
+
+            // start section 6
+            System.out.println("Within our getFactById method");
+
+            String sql = "INSERT INTO facts (fact) VALUES (?)";
+
+            try (Connection conn = DriverManager.getConnection(DB_URL);
+                PreparedStatement pstmt = conn.prepareStatement(sql);) {
+
+                // set the fact
+                pstmt.setString(1, text);
+                int rowsInserted = pstmt.executeUpdate();
+
+                
+
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next())
+                    {
+
+                        sendJson(exchange, 200,catFact);
+
+                    } else {
+                        sendJson(exchange, 404, new ErrorBody("no fact with id " + id));
+
+                    }
+                }
+
+            } catch (Exception error)
+            {
+                error.printStackTrace();
+            } 
+
+
         }
 
         // ---- Helper ------------------------------------------------------
