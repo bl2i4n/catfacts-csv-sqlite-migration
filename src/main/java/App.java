@@ -238,27 +238,25 @@ public class App {
             // start section 6
             System.out.println("Within our getFactById method");
 
-            String sql = "INSERT INTO facts (fact) VALUES (?)";
+            String sql = "INSERT INTO facts (fact) VALUES (?) RETURNING id";
 
             try (Connection conn = DriverManager.getConnection(DB_URL);
                 PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
                 // set the fact
                 pstmt.setString(1, text);
-                int rowsInserted = pstmt.executeUpdate();
-
-                
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next())
                     {
+                        int newFactId = rs.getInt("id");
+                        CatFact newCatFact = new CatFact(newFactId, text);
 
-                        sendJson(exchange, 200,catFact);
+                        
 
-                    } else {
-                        sendJson(exchange, 404, new ErrorBody("no fact with id " + id));
+                        sendJson(exchange, 201, newCatFact);
 
-                    }
+                    } 
                 }
 
             } catch (Exception error)
