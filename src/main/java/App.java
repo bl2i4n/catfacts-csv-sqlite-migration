@@ -149,7 +149,7 @@ public class App {
                 
                 while (rs.next())
                 {
-                    // newFactList.add(new CatFact(rs.getInt("id"), rs.getString("fact")));
+                    newFactList.add(new CatFact(rs.getInt("id"), rs.getString("fact")));
                 }
 
             } catch (Exception error)
@@ -170,17 +170,18 @@ public class App {
         }
 
         /** GET /facts/{id} */
-        void getFactById(HttpExchange exchange, int id) throws IOException {
-            for (CatFact fact : facts) {
-                if (fact.id() == id) {
-                    sendJson(exchange, 200, fact);
-                    return;
-                }
-            }
-            sendJson(exchange, 404, new ErrorBody("no fact with id " + id));
+        void getFactById(HttpExchange exchange, int id) throws IOException, SQLException {
+            // for (CatFact fact : facts) {
+            //     if (fact.id() == id) {
+            //         sendJson(exchange, 200, fact);
+            //         return;
+            //     }
+            // }
+            // sendJson(exchange, 404, new ErrorBody("no fact with id " + id));
 
-            System.out.println("Within our getFactById method");
+
             // start section 5
+            System.out.println("Within our getFactById method");
             String sql = "SELECT id, fact FROM facts WHERE id = ?";
 
             try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -192,10 +193,13 @@ public class App {
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next())
                     {
-                        sendJson(exchange, 200,);
+                        // set a reference variable we can pass into send Json
+                        CatFact catFact = new CatFact(rs.getInt("id"), rs.getString("fact"));
+                        sendJson(exchange, 200,catFact);
 
                     } else {
-                        sendJson(exchange, 404, );
+                        // CatFact catFact = new CatFact(rs.getInt("id"), rs.getString("fact"));
+                        sendJson(exchange, 404, new ErrorBody("no fact with id " + id));
 
                     }
                 }
@@ -204,9 +208,6 @@ public class App {
             {
                 error.printStackTrace();
             } 
-
-
-
         }
 
         /** POST /facts */
