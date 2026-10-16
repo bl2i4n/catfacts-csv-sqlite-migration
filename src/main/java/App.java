@@ -227,16 +227,8 @@ public class App {
                 return;
             }
 
-            CatFact created = new CatFact(nextId, text);
-            appendToCsv(created);
-            facts.add(created);
-            nextId++;
-
-            exchange.getResponseHeaders().set("Location", "/facts/" + created.id());
-            sendJson(exchange, 201, created);
-
             // start section 6
-            System.out.println("Within our getFactById method");
+            System.out.println("Within our createFact method");
 
             String sql = "INSERT INTO facts (fact) VALUES (?) RETURNING id";
 
@@ -252,7 +244,7 @@ public class App {
                         int newFactId = rs.getInt("id");
                         CatFact newCatFact = new CatFact(newFactId, text);
 
-                        
+                        exchange.getResponseHeaders().set("Location", "/facts/" + newCatFact.id());
 
                         sendJson(exchange, 201, newCatFact);
 
