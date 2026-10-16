@@ -149,13 +149,20 @@ public class App {
                 
                 while (rs.next())
                 {
-                    newFactList.add(new CatFact(rs.getInt("id"), rs.getString("fact")));
+                    // newFactList.add(new CatFact(rs.getInt("id"), rs.getString("fact")));
                 }
 
-            } catch (SQLException error)
+            } catch (Exception error)
             {
                 error.printStackTrace();
-            }
+            } 
+            
+            // finally {
+            //     rs.close();
+            //     pstmt.close();
+            //     conn.close();
+            // }
+
             // return newFactList;
             sendJson(exchange, 200, newFactList);
 
@@ -171,6 +178,35 @@ public class App {
                 }
             }
             sendJson(exchange, 404, new ErrorBody("no fact with id " + id));
+
+            System.out.println("Within our getFactById method");
+            // start section 5
+            String sql = "SELECT id, fact FROM facts WHERE id = ?";
+
+            try (Connection conn = DriverManager.getConnection(DB_URL);
+                PreparedStatement pstmt = conn.prepareStatement(sql);) {
+                
+                // set the first position 1 to id
+                pstmt.setInt(1, id);
+
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next())
+                    {
+                        sendJson(exchange, 200,);
+
+                    } else {
+                        sendJson(exchange, 404, );
+
+                    }
+                }
+
+            } catch (Exception error)
+            {
+                error.printStackTrace();
+            } 
+
+
+
         }
 
         /** POST /facts */
