@@ -1,5 +1,9 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +22,7 @@ class AppTest {
     3. ErrorBody 
     */
 
+    // #2
     @Test
     void catFactKeepsData() {
 
@@ -31,6 +36,7 @@ class AppTest {
         assertEquals("A cat has 230 bones while a human has 206", fact.fact());
     }
 
+    // #3
     @Test
     void compareTwoCatFacts() {
     
@@ -43,8 +49,9 @@ class AppTest {
 
     }
 
+    // #4
     @Test
-    void twoCatFactsAreDifferent() {
+    void catFactContainsValues() {
     
         // initialize 2 cat facts
         App.CatFact catFactOne = new App.CatFact(1, "A cat has 230 bones while a human has 206");
@@ -52,6 +59,21 @@ class AppTest {
 
         //asert
         assertNotEquals(catFactOne, catFactTwo);
+
+    }
+
+    // #5
+    @Test
+    void catFactsHasValues() {
+    
+        // initialize stuff
+        List<App.CatFact> newFactList = new ArrayList<>();
+        newFactList.add(new App.CatFact(1, "some text"));
+        
+        boolean newFactListExists = newFactList.contains(new App.CatFact(1, "some text"));
+
+        //asert
+        assertTrue(newFactListExists);
 
     }
 
