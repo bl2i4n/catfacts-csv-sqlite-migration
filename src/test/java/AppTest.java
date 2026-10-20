@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -98,6 +99,31 @@ class AppTest {
 
         //asert
         assertEquals("404", newError.error());
+
+    }
+
+    // #8
+    @Test
+    void catFactsHasEmptyString() {
+    
+        // initialize stuff
+        App.CatFact emptyCatFact = new App.CatFact(1, "");
+
+
+        //asert
+        assertNotNull(emptyCatFact);
+        assertEquals("", emptyCatFact.fact());
+
+    }
+
+    // #9
+    @Test
+    void catFactsHasValues() {
+    
+        // initialize stuff
+
+        //asert
+        // assertTrue(newFactListExists);
 
     }
 
