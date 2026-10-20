@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 
 
+
 class AppTest {
 
     /*
@@ -19,14 +20,14 @@ class AppTest {
     @Test
     void catFactKeepsData() {
 
-    // initialize what you need
-
-    // Assert for what needs to be tested
-
     //1. Construct a new CatFact record, passing in an arbitrary id and fact ,
-    //2. assert that the id is the id you passed in from constructing the record
-    //3. and assert that the fact is the fact you passed in from constructing the record.
+    App.CatFact fact = new App.CatFact(1, "A cat has 230 bones while a human has 206");
 
+    //2. assert that the id is the id you passed in from constructing the record
+    assertEquals(1, fact.id());
+    
+    //3. and assert that the fact is the fact you passed in from constructing the record.
+    assertEquals("A cat has 230 bones while a human has 206", fact.fact());
     }
 
 }
