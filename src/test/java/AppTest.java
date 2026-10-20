@@ -77,4 +77,39 @@ class AppTest {
 
     }
 
+    // #6
+    @Test
+    void newFactReturnsFact() {
+    
+        // initialize stuff
+        App.NewFact newFact = new App.NewFact("Brian is a cat");
+
+        //asert
+        assertEquals("Brian is a cat", newFact.fact());
+
+    }
+
+    // #7
+    @Test
+    void checkErrorBody() {
+    
+        // initialize stuff
+        App.ErrorBody newError = new App.ErrorBody("404");
+
+        //asert
+        assertEquals("404", newError.error());
+
+    }
+
 }
+
+    // #6
+    // @Test
+    // void catFactsHasValues() {
+    
+    //     // initialize stuff
+
+    //     //asert
+    //     // assertTrue(newFactListExists);
+
+    // }
