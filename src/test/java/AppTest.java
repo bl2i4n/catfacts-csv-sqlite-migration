@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.Gson;
+import java.io.IOException;
 
 
 
@@ -180,7 +181,83 @@ class AppTest {
 
 
         //asert
-        assertEquals(jsonResult, fact);
+        assertEquals(fact, jsonResult);
+
+    }
+
+    // #13
+    @Test
+    void loadFromCSVCheck() throws IOException{
+    
+        // initialize stuff
+        App.loadFromCsv();
+
+        //asert
+        assertEquals(10, App.facts.size());
+
+    }
+
+    // #14
+    @Test
+    void factWithCommas() throws IOException {
+    
+        // initialize stuff
+        App.loadFromCsv();
+
+        //asert
+        assertEquals("Cats, like people, tend to favor one paw over the other", App.facts.get(8).fact());
+
+    }
+
+    // #15
+    @Test
+    void idCheck() throws IOException{
+    
+        // initialize stuff
+        App.loadFromCsv();
+
+        //asert
+        assertEquals(1, App.facts.get(0).id());
+
+    }
+
+    // #16
+    @Test
+    void nextIdCheck() throws IOException{
+    
+        // initialize stuff
+        App.loadFromCsv();
+
+        //asert
+        assertEquals(11, App.nextId);
+
+
+    }
+
+    // #17
+    /*
+    This test runs loadFromCsv twice and therefore we then have 20 entries
+    loadFromCsv reads the CSV and adds everything to a list
+    since we read the CSV twice we're simply adding everything to the list twice
+
+    I would change what we expect to be 20 since we don't clear the list
+    We should be expecting 20 actually since our test is checking if loading from CSV is working
+    two times in a row and if so, we *should* be getting 20.
+
+    In our actual App.java file we should be clearing the CSV as well to ensure we're not
+    adding unnecessary values to our list
+    */
+   
+    @Test
+    void loadFromCSVTwice() throws IOException{
+    
+        // initialize stuff
+        App.loadFromCsv();
+        App.loadFromCsv();
+
+        //asert
+        // same assertion as number 13 but we run loadFromCsv twice
+        assertEquals(10, App.facts.size());
 
     }
 
