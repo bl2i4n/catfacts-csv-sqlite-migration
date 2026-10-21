@@ -12,7 +12,15 @@ import com.google.gson.Gson;
 import java.io.IOException;
 
 
+/*
 
+In the tests below we test each record: CatFact, NewFact and ErrorBody.
+We also test loadFromCsv and the values we should be expecting from when we run that method.
+
+There was one test that failed when we ran loadFromCsv twice and this test is expected to fail.
+We need to update loadFromCsv within App.java to clear the list so we can get this test passing.
+
+*/
 
 
 class AppTest {
@@ -247,7 +255,7 @@ class AppTest {
     In our actual App.java file we should be clearing the CSV as well to ensure we're not
     adding unnecessary values to our list
     */
-   
+
     @Test
     void loadFromCSVTwice() throws IOException{
     
