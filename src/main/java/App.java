@@ -122,7 +122,7 @@ public class App {
         }
 
         /** GET /facts */
-        void getAllFacts(HttpExchange exchange) throws IOException, SQLException {
+        List<CatFact> getAllFacts(String dbUrl) throws SQLException {
 
             // create an empty List<CatFact> 
             List<CatFact> newFactList = new ArrayList<>();
@@ -151,8 +151,8 @@ public class App {
             //     conn.close();
             // }
 
-            // return newFactList;
-            sendJson(exchange, 200, newFactList);
+            return newFactList;
+            // sendJson(exchange, 200, newFactList);
 
 
         }
