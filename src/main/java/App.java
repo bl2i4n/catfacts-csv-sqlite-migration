@@ -92,7 +92,7 @@ public class App {
             // "/facts" or "/facts/"  ->  returns the whole collection
             if (path.equals("/facts") || path.equals("/facts/")) {
                 switch (method) {
-                    case "GET"  -> getAllFacts(exchange);
+                    case "GET"  -> sendJson(exchange, 200, getAllFacts(DB_URL));
                     case "POST" -> createFact(exchange);
                     default     -> sendJson(exchange, 405, new ErrorBody("method not allowed"));
                 }
@@ -122,7 +122,7 @@ public class App {
         }
 
         /** GET /facts */
-        List<CatFact> getAllFacts(String dbUrl) throws SQLException {
+        List<CatFact> getAllFacts(String DB_URL) throws SQLException {
 
             // create an empty List<CatFact> 
             List<CatFact> newFactList = new ArrayList<>();
