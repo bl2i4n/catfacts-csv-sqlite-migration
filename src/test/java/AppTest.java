@@ -7,9 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.nio.file.Path;
+
+
+import static org.junit.jupiter.api.Assertions.*;
+import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
 
 /*
@@ -24,6 +33,35 @@ We need to update loadFromCsv within App.java to clear the list so we can get th
 
 
 class AppTest {
+
+    /*
+    Builds a db, adds two facts into it and then runs a test on our db
+    Added this for the Seams homework
+    */
+    @TempDir
+    Path tempDir;
+    @Test
+    void getAllFactsReturnsEveryRowInIdOrder() throws Exception {
+    
+        Path db = tempDir.resolve("test.db");
+        String url = "jdbc:sqlite:" + db;
+
+        try (Connection c = DriverManager.getConnection(url);
+        Statement s = c.createStatement()) {
+
+            s.executeUpdate("CREATE TABLE facts (id INTEGER PRIMARY KEY AUTOINCREMENT, fact TEXT NOT NULL)");
+            s.executeUpdate("INSERT INTO facts (id, fact) VALUES (1, 'Cats purr')");
+            s.executeUpdate("INSERT INTO facts (id, fact) VALUES (2, 'Cats, oddly, cannot taste sweetness')");
+        
+        }
+        
+        List<App.CatFact> facts = new App.FactsHandler().getAllFacts(url);
+        
+        assertEquals(2, facts.size());
+        assertEquals(1, facts.get(0).id());
+        assertEquals("Cats, oddly, cannot taste sweetness", facts.get(1).fact());
+    }
+
 
     /*
     What is a record?

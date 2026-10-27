@@ -158,17 +158,8 @@ public class App {
         }
 
         /** GET /facts/{id} */
-        void getFactById(HttpExchange exchange, int id) throws IOException, SQLException {
-            // for (CatFact fact : facts) {
-            //     if (fact.id() == id) {
-            //         sendJson(exchange, 200, fact);
-            //         return;
-            //     }
-            // }
-            // sendJson(exchange, 404, new ErrorBody("no fact with id " + id));
+        CatFact getFactById(String DB_URL, int id) throws SQLException {
 
-
-            // start section 5
             System.out.println("Within our getFactById method");
             String sql = "SELECT id, fact FROM facts WHERE id = ?";
 
@@ -183,11 +174,12 @@ public class App {
                     {
                         // set a reference variable we can pass into send Json
                         CatFact catFact = new CatFact(rs.getInt("id"), rs.getString("fact"));
-                        sendJson(exchange, 200,catFact);
+
+                        return catFact;
 
                     } else {
-                        // CatFact catFact = new CatFact(rs.getInt("id"), rs.getString("fact"));
-                        sendJson(exchange, 404, new ErrorBody("no fact with id " + id));
+
+                        return null;
 
                     }
                 }
@@ -196,6 +188,7 @@ public class App {
             {
                 error.printStackTrace();
             } 
+            return null;
         }
 
         /** POST /facts */
