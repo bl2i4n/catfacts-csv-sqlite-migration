@@ -18,6 +18,7 @@ import com.google.gson.JsonParseException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import java.util.Optional;
 
 /**
  * Cat Facts API, backed by a CSV file.
@@ -115,7 +116,7 @@ public class App {
                 return;
             }
             if (method.equals("GET")) {
-                getFactById(exchange, id);
+                findFactById(exchange, id);
             } else {
                 sendJson(exchange, 405, new ErrorBody("method not allowed"));
             }
@@ -158,9 +159,9 @@ public class App {
         }
 
         /** GET /facts/{id} */
-        CatFact getFactById(String DB_URL, int id) throws SQLException {
+        Optional<CatFact> findFactById(String DB_URL, int id) throws SQLException {
 
-            System.out.println("Within our getFactById method");
+            System.out.println("Within our findFactById method");
             String sql = "SELECT id, fact FROM facts WHERE id = ?";
 
             try (Connection conn = DriverManager.getConnection(DB_URL);
