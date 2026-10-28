@@ -79,7 +79,8 @@ class AppTest {
         
         Optional<App.CatFact> facts = new App.FactsHandler().findFactById(url, 2);
         
-        assertTrue();
+        assertTrue(facts.isPresent());
+        assertEquals("Cats, oddly, cannot taste sweetness",facts.get().fact());
     }
 
     @Test
