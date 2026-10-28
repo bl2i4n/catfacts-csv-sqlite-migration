@@ -63,7 +63,7 @@ class AppTest {
     }
 
     @Test
-    void findFactByIdReturnsTheFact() throws Exception {
+    void findFactByIdReturnsFact() throws Exception {
     
         Path db = tempDir.resolve("test.db");
         String url = "jdbc:sqlite:" + db;
@@ -84,7 +84,7 @@ class AppTest {
     }
 
     @Test
-    void getAllFactsReturnsEveryRowInIdOrder() throws Exception {
+    void findFactByIdReturnsEmpty() throws Exception {
     
         Path db = tempDir.resolve("test.db");
         String url = "jdbc:sqlite:" + db;
@@ -98,11 +98,9 @@ class AppTest {
         
         }
         
-        List<App.CatFact> facts = new App.FactsHandler().getAllFacts(url);
+        Optional<App.CatFact> facts = new App.FactsHandler().findFactById(url, 99);        
         
-        assertEquals(2, facts.size());
-        assertEquals(1, facts.get(0).id());
-        assertEquals("Cats, oddly, cannot taste sweetness", facts.get(1).fact());
+        assertFalse(facts.isPresent());
     }
 
 
