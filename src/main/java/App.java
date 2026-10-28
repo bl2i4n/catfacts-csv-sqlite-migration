@@ -116,7 +116,13 @@ public class App {
                 return;
             }
             if (method.equals("GET")) {
-                findFactById(exchange, id);
+                Optional<CatFact> catFactFound = findFactById(DB_URL, id);
+                if (catFactFound.isPresent()) {
+                    sendJson(exchange, 200, catFactFound.get());
+
+                } else {
+                    sendJson(exchange, 404, new ErrorBody("no fact with id " + id));                    
+                }
             } else {
                 sendJson(exchange, 405, new ErrorBody("method not allowed"));
             }
