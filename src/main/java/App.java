@@ -159,12 +159,12 @@ public class App {
         }
 
         /** GET /facts/{id} */
-        Optional<CatFact> findFactById(String DB_URL, int id) throws SQLException {
+        Optional<CatFact> findFactById(String dbUrl, int id) throws SQLException {
 
             System.out.println("Within our findFactById method");
             String sql = "SELECT id, fact FROM facts WHERE id = ?";
 
-            try (Connection conn = DriverManager.getConnection(DB_URL);
+            try (Connection conn = DriverManager.getConnection(dbUrl);
                 PreparedStatement pstmt = conn.prepareStatement(sql);) {
                 
                 // set the first position 1 to id
@@ -176,11 +176,11 @@ public class App {
                         // set a reference variable we can pass into send Json
                         CatFact catFact = new CatFact(rs.getInt("id"), rs.getString("fact"));
 
-                        return catFact;
+                        return Optional.of(catFact);
 
                     } else {
 
-                        return null;
+                        return Optional.empty();
 
                     }
                 }
@@ -189,7 +189,7 @@ public class App {
             {
                 error.printStackTrace();
             } 
-            return null;
+            return Optional.empty();
         }
 
         /** POST /facts */
