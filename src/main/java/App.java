@@ -21,11 +21,8 @@ import com.sun.net.httpserver.HttpServer;
 import java.util.Optional;
 
 /**
- * Cat Facts API, backed by a CSV file.
- *
- *   GET  /facts        every fact
- *   GET  /facts/{id}   one fact, or 404
- *   POST /facts        add a fact; body is {"fact": "..."}
+Wires all the parts together and starts the HTTPServer
+We first connect the handler to the HTTPServer
  */
 public class App {
 
