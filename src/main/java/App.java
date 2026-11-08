@@ -27,28 +27,11 @@ We first connect the handler to the HTTPServer
 public class App {
 
     static final int PORT = 8080;
+    static final String DB_URL = "jdbc:sqlite:catfacts.db";
     // removed the record lines
-
-    /** Reads every line of facts.csv into the in-memory list. */
-    static void loadFromCsv() throws IOException {
-        for (String line : Files.readAllLines(CSV_FILE, StandardCharsets.UTF_8)) {
-            if (line.isBlank()) {
-                continue;
-            }
-            // Limit of 2: split at the FIRST comma only, so commas in the fact survive.
-            String[] parts = line.split(",", 2);
-            int id = Integer.parseInt(parts[0].trim());
-            String fact = parts[1].trim();
-            facts.add(new CatFact(id, fact));
-            nextId = Math.max(nextId, id + 1);
-        }
-    }
-
     // removed Gson stuff
 
     public static void main(String[] args) throws IOException {
-        // loadFromCsv();
-        // System.out.println("Loaded " + facts.size() + " facts from " + CSV_FILE);
 
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
         server.createContext("/facts", new FactsHandler());

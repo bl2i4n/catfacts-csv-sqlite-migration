@@ -271,12 +271,12 @@ class AppTest {
     @Test
     void loadFromCSVCheck() throws IOException{
     
-        App.facts.clear();
+        MigrateCsvToDb.facts.clear();
         // initialize stuff
-        App.loadFromCsv();
+        MigrateCsvToDb.loadFromCsv();
 
         //asert
-        assertEquals(10, App.facts.size());
+        assertEquals(10, MigrateCsvToDb.facts.size());
 
     }
 
@@ -285,10 +285,10 @@ class AppTest {
     void factWithCommas() throws IOException {
     
         // initialize stuff
-        App.loadFromCsv();
+        MigrateCsvToDb.loadFromCsv();
 
         //asert
-        assertEquals("Cats, like people, tend to favor one paw over the other", App.facts.get(8).fact());
+        assertEquals("Cats, like people, tend to favor one paw over the other", MigrateCsvToDb.facts.get(8).fact());
 
     }
 
@@ -297,10 +297,10 @@ class AppTest {
     void idCheck() throws IOException{
     
         // initialize stuff
-        App.loadFromCsv();
+        MigrateCsvToDb.loadFromCsv();
 
         //asert
-        assertEquals(1, App.facts.get(0).id());
+        assertEquals(1, MigrateCsvToDb.facts.get(0).id());
 
     }
 
@@ -309,10 +309,10 @@ class AppTest {
     void nextIdCheck() throws IOException{
     
         // initialize stuff
-        App.loadFromCsv();
+        MigrateCsvToDb.loadFromCsv();
 
         //asert
-        assertEquals(11, App.nextId);
+        assertEquals(11, MigrateCsvToDb.nextId);
 
 
     }
@@ -334,15 +334,15 @@ class AppTest {
     @Test
     void loadFromCSVTwice() throws IOException{
     
-        // App.facts.clear();
+        // MigrateCsvToDb.facts.clear();
         // We can skip this test
         // initialize stuff
-        App.loadFromCsv();
-        App.loadFromCsv();
+        MigrateCsvToDb.loadFromCsv();
+        MigrateCsvToDb.loadFromCsv();
 
         //asert
         // same assertion as number 13 but we run loadFromCsv twice
-        assertEquals(10, App.facts.size());
+        assertEquals(10, MigrateCsvToDb.facts.size());
 
     }
 
