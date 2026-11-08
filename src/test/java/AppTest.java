@@ -208,7 +208,7 @@ class AppTest {
     
         // initialize stuff
         CatFact fact = new CatFact(1, "A cat has 230 bones while a human has 206");
-        String json = App.gson.toJson(fact);
+        String json = Json.gson.toJson(fact);
         System.out.println(json);
 
 
@@ -227,7 +227,7 @@ class AppTest {
         // need to convert this to a string so we can then deserialize
         String jsonString = "{\"fact\": \"Brian is a cat\"}";
         // create an jsonResult which is a NewFact type and then we convert the json back to that object type
-        NewFact jsonResult = App.gson.fromJson(jsonString, NewFact.class);
+        NewFact jsonResult = Json.gson.fromJson(jsonString, NewFact.class);
 
         //asert
         assertEquals("Brian is a cat", jsonResult.fact());
@@ -240,7 +240,7 @@ class AppTest {
     
         // initialize stuff
         CatFact fact = new CatFact(1, "Cats don't like dogs");
-        String json = App.gson.toJson(fact);
+        String json = Json.gson.toJson(fact);
         System.out.println(json);
 
 
@@ -255,10 +255,10 @@ class AppTest {
     
         // initialize stuff
         CatFact fact = new CatFact(9, "Cats, unlike dogs, cannot taste sweetness");
-        String json = App.gson.toJson(fact);
+        String json = Json.gson.toJson(fact);
         System.out.println(json);
 
-        CatFact jsonResult = App.gson.fromJson(json, CatFact.class);
+        CatFact jsonResult = Json.gson.fromJson(json, CatFact.class);
 
 
 
