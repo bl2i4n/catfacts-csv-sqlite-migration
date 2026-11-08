@@ -1,3 +1,1 @@
-public class ErrorBody {
-    record ErrorBody(String error) {}
-}
+record ErrorBody(String error) {}

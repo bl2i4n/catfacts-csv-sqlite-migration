@@ -1,3 +1,1 @@
-public class NewFact {
-    record NewFact(String fact) {}
-}
+record NewFact(String fact) {}

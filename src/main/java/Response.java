@@ -1,0 +1,1 @@
+record Response(int status, Object body, String location) {}

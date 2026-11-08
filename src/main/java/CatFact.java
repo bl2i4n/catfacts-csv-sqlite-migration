@@ -1,3 +1,1 @@
-public class CatFact {
-    
-}
+record CatFact(int id, String fact) {}

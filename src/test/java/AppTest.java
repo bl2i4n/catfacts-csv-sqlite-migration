@@ -1,8 +1,3 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +50,7 @@ class AppTest {
         
         }
         
-        List<App.CatFact> facts = new App.FactsHandler().getAllFacts(url);
+        List<CatFact> facts = new App.FactsHandler().getAllFacts(url);
         
         assertEquals(2, facts.size());
         assertEquals(1, facts.get(0).id());
@@ -77,7 +72,7 @@ class AppTest {
         
         }
         
-        Optional<App.CatFact> facts = new App.FactsHandler().findFactById(url, 2);
+        Optional<CatFact> facts = new App.FactsHandler().findFactById(url, 2);
         
         assertTrue(facts.isPresent());
         assertEquals("Cats, oddly, cannot taste sweetness",facts.get().fact());
@@ -98,7 +93,7 @@ class AppTest {
         
         }
         
-        Optional<App.CatFact> facts = new App.FactsHandler().findFactById(url, 99);        
+        Optional<CatFact> facts = new App.FactsHandler().findFactById(url, 99);        
         
         assertFalse(facts.isPresent());
     }
@@ -119,7 +114,7 @@ class AppTest {
     void catFactKeepsData() {
 
         //1. Construct a new CatFact record, passing in an arbitrary id and fact ,
-        App.CatFact fact = new App.CatFact(1, "A cat has 230 bones while a human has 206");
+        CatFact fact = new CatFact(1, "A cat has 230 bones while a human has 206");
 
         //2. assert that the id is the id you passed in from constructing the record
         assertEquals(1, fact.id());
@@ -133,8 +128,8 @@ class AppTest {
     void compareTwoCatFacts() {
     
         // initialize 2 cat facts
-        App.CatFact catFactOne = new App.CatFact(1, "A cat has 230 bones while a human has 206");
-        App.CatFact catFactTwo = new App.CatFact(1, "A cat has 230 bones while a human has 206");
+        CatFact catFactOne = new CatFact(1, "A cat has 230 bones while a human has 206");
+        CatFact catFactTwo = new CatFact(1, "A cat has 230 bones while a human has 206");
 
         //asert
         assertEquals(catFactOne, catFactTwo);
@@ -146,8 +141,8 @@ class AppTest {
     void catFactContainsValues() {
     
         // initialize 2 cat facts
-        App.CatFact catFactOne = new App.CatFact(1, "A cat has 230 bones while a human has 206");
-        App.CatFact catFactTwo = new App.CatFact(1, "Cats sleep for about 70 percent of their lives");
+        CatFact catFactOne = new CatFact(1, "A cat has 230 bones while a human has 206");
+        CatFact catFactTwo = new CatFact(1, "Cats sleep for about 70 percent of their lives");
 
         //asert
         assertNotEquals(catFactOne, catFactTwo);
@@ -159,10 +154,10 @@ class AppTest {
     void catFactsHasValues() {
     
         // initialize stuff
-        List<App.CatFact> newFactList = new ArrayList<>();
-        newFactList.add(new App.CatFact(1, "some text"));
+        List<CatFact> newFactList = new ArrayList<>();
+        newFactList.add(new CatFact(1, "some text"));
         
-        boolean newFactListExists = newFactList.contains(new App.CatFact(1, "some text"));
+        boolean newFactListExists = newFactList.contains(new CatFact(1, "some text"));
 
         //asert
         assertTrue(newFactListExists);
@@ -174,7 +169,7 @@ class AppTest {
     void newFactReturnsFact() {
     
         // initialize stuff
-        App.NewFact newFact = new App.NewFact("Brian is a cat");
+        NewFact newFact = new NewFact("Brian is a cat");
 
         //asert
         assertEquals("Brian is a cat", newFact.fact());
@@ -186,7 +181,7 @@ class AppTest {
     void checkErrorBody() {
     
         // initialize stuff
-        App.ErrorBody newError = new App.ErrorBody("404");
+        ErrorBody newError = new ErrorBody("404");
 
         //asert
         assertEquals("404", newError.error());
@@ -198,7 +193,7 @@ class AppTest {
     void catFactsHasEmptyString() {
     
         // initialize stuff
-        App.CatFact emptyCatFact = new App.CatFact(1, "");
+        CatFact emptyCatFact = new CatFact(1, "");
 
 
         //asert
@@ -212,7 +207,7 @@ class AppTest {
     void serializeCatFact() {
     
         // initialize stuff
-        App.CatFact fact = new App.CatFact(1, "A cat has 230 bones while a human has 206");
+        CatFact fact = new CatFact(1, "A cat has 230 bones while a human has 206");
         String json = App.gson.toJson(fact);
         System.out.println(json);
 
@@ -232,7 +227,7 @@ class AppTest {
         // need to convert this to a string so we can then deserialize
         String jsonString = "{\"fact\": \"Brian is a cat\"}";
         // create an jsonResult which is a NewFact type and then we convert the json back to that object type
-        App.NewFact jsonResult = App.gson.fromJson(jsonString, App.NewFact.class);
+        NewFact jsonResult = App.gson.fromJson(jsonString, NewFact.class);
 
         //asert
         assertEquals("Brian is a cat", jsonResult.fact());
@@ -244,7 +239,7 @@ class AppTest {
     void checkApostrophe() {
     
         // initialize stuff
-        App.CatFact fact = new App.CatFact(1, "Cats don't like dogs");
+        CatFact fact = new CatFact(1, "Cats don't like dogs");
         String json = App.gson.toJson(fact);
         System.out.println(json);
 
@@ -259,11 +254,11 @@ class AppTest {
     void commaTest() {
     
         // initialize stuff
-        App.CatFact fact = new App.CatFact(9, "Cats, unlike dogs, cannot taste sweetness");
+        CatFact fact = new CatFact(9, "Cats, unlike dogs, cannot taste sweetness");
         String json = App.gson.toJson(fact);
         System.out.println(json);
 
-        App.CatFact jsonResult = App.gson.fromJson(json, App.CatFact.class);
+        CatFact jsonResult = App.gson.fromJson(json, CatFact.class);
 
 
 
@@ -276,6 +271,7 @@ class AppTest {
     @Test
     void loadFromCSVCheck() throws IOException{
     
+        App.facts.clear();
         // initialize stuff
         App.loadFromCsv();
 
@@ -338,6 +334,8 @@ class AppTest {
     @Test
     void loadFromCSVTwice() throws IOException{
     
+        // App.facts.clear();
+        // We can skip this test
         // initialize stuff
         App.loadFromCsv();
         App.loadFromCsv();

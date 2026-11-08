@@ -49,7 +49,7 @@ public class MigrateCsvToDb {
         String sql = "INSERT INTO facts (id, fact) VALUES (?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             int inserted = 0;
-            for (App.CatFact fact : App.facts) {
+            for (CatFact fact : App.facts) {
                 // TODO: fill the two ? placeholders with this fact's id and text.
                 // binded the data
                 pstmt.setInt(1, fact.id());
