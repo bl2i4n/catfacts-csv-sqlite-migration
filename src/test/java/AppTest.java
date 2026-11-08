@@ -50,7 +50,7 @@ class AppTest {
         
         }
         
-        List<CatFact> facts = new App.FactsHandler().getAllFacts(url);
+        List<CatFact> facts = new FactDatabase(url).getAllFacts();
         
         assertEquals(2, facts.size());
         assertEquals(1, facts.get(0).id());
@@ -72,7 +72,7 @@ class AppTest {
         
         }
         
-        Optional<CatFact> facts = new App.FactsHandler().findFactById(url, 2);
+        Optional<CatFact> facts = new FactDatabase(url).findFactById(2);
         
         assertTrue(facts.isPresent());
         assertEquals("Cats, oddly, cannot taste sweetness",facts.get().fact());
@@ -93,7 +93,7 @@ class AppTest {
         
         }
         
-        Optional<CatFact> facts = new App.FactsHandler().findFactById(url, 99);        
+        Optional<CatFact> facts = new FactDatabase(url).findFactById(99);      
         
         assertFalse(facts.isPresent());
     }
