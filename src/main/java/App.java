@@ -41,6 +41,8 @@ public class App {
 
     static class FactsHandler implements HttpHandler {
 
+        private final FactDatabase database = new FactDatabase(DB_URL);
+
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             try {
@@ -60,7 +62,7 @@ public class App {
             // "/facts" or "/facts/"  ->  returns the whole collection
             if (path.equals("/facts") || path.equals("/facts/")) {
                 switch (method) {
-                    case "GET"  -> sendJson(exchange, 200, getAllFacts(DB_URL));
+                    case "GET"  -> sendJson(exchange, 200, database.getAllFacts());
                     case "POST" -> createFact(exchange);
                     default     -> sendJson(exchange, 405, new ErrorBody("method not allowed"));
                 }
@@ -83,7 +85,7 @@ public class App {
                 return;
             }
             if (method.equals("GET")) {
-                Optional<CatFact> catFactFound = findFactById(DB_URL, id);
+                Optional<CatFact> catFactFound = database.findFactById(id);
                 if (catFactFound.isPresent()) {
                     sendJson(exchange, 200, catFactFound.get());
 
@@ -190,31 +192,33 @@ public class App {
             // start section 6
             System.out.println("Within our createFact method");
 
-            String sql = "INSERT INTO facts (fact) VALUES (?) RETURNING id";
+            CatFact created = database.insertFact(text);
 
-            try (Connection conn = DriverManager.getConnection(DB_URL);
-                PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            // String sql = "INSERT INTO facts (fact) VALUES (?) RETURNING id";
 
-                // set the fact
-                pstmt.setString(1, text);
+            // try (Connection conn = DriverManager.getConnection(DB_URL);
+            //     PreparedStatement pstmt = conn.prepareStatement(sql);) {
 
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    if (rs.next())
-                    {
-                        int newFactId = rs.getInt("id");
-                        CatFact newCatFact = new CatFact(newFactId, text);
+            //     // set the fact
+            //     pstmt.setString(1, text);
 
-                        exchange.getResponseHeaders().set("Location", "/facts/" + newCatFact.id());
+            //     try (ResultSet rs = pstmt.executeQuery()) {
+            //         if (rs.next())
+            //         {
+            //             int newFactId = rs.getInt("id");
+            //             CatFact newCatFact = new CatFact(newFactId, text);
 
-                        sendJson(exchange, 201, newCatFact);
+            //             exchange.getResponseHeaders().set("Location", "/facts/" + newCatFact.id());
 
-                    } 
-                }
+            //             sendJson(exchange, 201, newCatFact);
 
-            } catch (Exception error)
-            {
-                error.printStackTrace();
-            } 
+            //         } 
+            //     }
+
+            // } catch (Exception error)
+            // {
+            //     error.printStackTrace();
+            // } 
 
 
         }
