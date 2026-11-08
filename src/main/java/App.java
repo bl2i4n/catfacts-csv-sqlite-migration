@@ -27,13 +27,7 @@ We first connect the handler to the HTTPServer
 public class App {
 
     static final int PORT = 8080;
-    static final Path CSV_FILE = Path.of("facts.csv");
-    static final String DB_URL = "jdbc:sqlite:catfacts.db";
-
     // removed the record lines
-
-    static final List<CatFact> facts = new ArrayList<>();
-    static int nextId = 1;
 
     /** Reads every line of facts.csv into the in-memory list. */
     static void loadFromCsv() throws IOException {
