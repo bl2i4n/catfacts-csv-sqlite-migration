@@ -64,8 +64,8 @@ public class MigrateCsvToDb {
 
     /** Section 3: copies every fact from facts.csv into the facts table, as one transaction. */
     static void copyFacts(Connection conn) throws IOException, SQLException {
-        App.loadFromCsv();
-        System.out.println("Read " + App.facts.size() + " facts from facts.csv");
+        loadFromCsv();
+        System.out.println("Read " + facts.size() + " facts from facts.csv");
 
         // TODO: turn off auto-commit, so nothing is saved until you commit.
         conn.setAutoCommit(false);
@@ -74,7 +74,7 @@ public class MigrateCsvToDb {
         String sql = "INSERT INTO facts (id, fact) VALUES (?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             int inserted = 0;
-            for (CatFact fact : App.facts) {
+            for (CatFact fact : facts) {
                 // TODO: fill the two ? placeholders with this fact's id and text.
                 // binded the data
                 pstmt.setInt(1, fact.id());
