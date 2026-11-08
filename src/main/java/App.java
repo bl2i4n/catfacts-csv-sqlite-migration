@@ -50,10 +50,7 @@ public class App {
         }
     }
 
-    static final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .disableHtmlEscaping()   // keep ' and = readable instead of '
-            .create();
+    // removed Gson stuff
 
     public static void main(String[] args) throws IOException {
         // loadFromCsv();
@@ -197,7 +194,7 @@ public class App {
 
             NewFact input;
             try {
-                input = gson.fromJson(body, NewFact.class);
+                input = Json.gson.fromJson(body, NewFact.class);
             } catch (JsonParseException e) {
                 sendJson(exchange, 400, new ErrorBody("body must be JSON like {\"fact\": \"...\"}"));
                 return;
@@ -249,7 +246,7 @@ public class App {
 
         /** Converts any object to JSON with Gson and sends it with the given status. */
         void sendJson(HttpExchange exchange, int status, Object body) throws IOException {
-            byte[] bytes = gson.toJson(body).getBytes(StandardCharsets.UTF_8);
+            byte[] bytes = Json.gson.toJson(body).getBytes(StandardCharsets.UTF_8);
             exchange.getResponseHeaders().set("Content-Type", "application/json; charset=utf-8");
             exchange.sendResponseHeaders(status, bytes.length);
             try (OutputStream out = exchange.getResponseBody()) {
