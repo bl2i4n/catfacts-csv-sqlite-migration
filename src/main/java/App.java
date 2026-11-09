@@ -101,38 +101,7 @@ public class App {
 
         //removed getFactById
 
-        /** POST /facts */
-        void createFact(HttpExchange exchange) throws IOException, SQLException {
-            String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-
-            NewFact input;
-            try {
-                input = Json.gson.fromJson(body, NewFact.class);
-            } catch (JsonParseException e) {
-                sendJson(exchange, 400, new ErrorBody("body must be JSON like {\"fact\": \"...\"}"));
-                return;
-            }
-            if (input == null || input.fact() == null || input.fact().isBlank()) {
-                sendJson(exchange, 400, new ErrorBody("\"fact\" is required and cannot be blank"));
-                return;
-            }
-            String text = input.fact().trim();
-            if (text.contains("\n") || text.contains("\r")) {
-                // One fact per line is how facts.csv is laid out.
-                sendJson(exchange, 400, new ErrorBody("\"fact\" must be a single line"));
-                return;
-            }
-
-            // start section 6
-            System.out.println("Within our createFact method");
-
-            CatFact created = database.insertFact(text);
-
-            exchange.getResponseHeaders().set("Location", "/facts/" + created.id());
-            sendJson(exchange, 201, created);
-
-
-        }
+        //removed createFacts
 
         // ---- Helper ------------------------------------------------------
 
