@@ -40,6 +40,14 @@ class FactsRouterTest {
         FactDatabase factDatabase = new FactDatabase(url);
         FactsRouter router = new FactsRouter(factDatabase);
 
+    // 3. call route with "GET", "/facts/99", and an empty body
+        Response response = router.route("GET", "/facts/99", "");
+
+
+    //asert
+    // the status should be 404
+        assertEquals(404, response.status());
     }
+    
 
 }
