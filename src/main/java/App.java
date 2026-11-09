@@ -97,78 +97,12 @@ public class App {
             }
         }
 
-        /** GET /facts */
-        List<CatFact> getAllFacts(String DB_URL) throws SQLException {
+        //removed getAllFacts
 
-            // create an empty List<CatFact> 
-            List<CatFact> newFactList = new ArrayList<>();
-
-            String sql = "SELECT id, fact FROM facts ORDER BY id";
-            // need to create the connection of pass it into the parameter for getAllFacts?
-            try (Connection conn = DriverManager.getConnection(DB_URL);
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                ResultSet rs = pstmt.executeQuery()) {
-
-                System.out.println("Within our getAllFacts method");
-                
-                while (rs.next())
-                {
-                    newFactList.add(new CatFact(rs.getInt("id"), rs.getString("fact")));
-                }
-
-            } catch (Exception error)
-            {
-                error.printStackTrace();
-            } 
-            
-            // finally {
-            //     rs.close();
-            //     pstmt.close();
-            //     conn.close();
-            // }
-
-            return newFactList;
-            // sendJson(exchange, 200, newFactList);
-
-
-        }
-
-        /** GET /facts/{id} */
-        Optional<CatFact> findFactById(String dbUrl, int id) throws SQLException {
-
-            System.out.println("Within our findFactById method");
-            String sql = "SELECT id, fact FROM facts WHERE id = ?";
-
-            try (Connection conn = DriverManager.getConnection(dbUrl);
-                PreparedStatement pstmt = conn.prepareStatement(sql);) {
-                
-                // set the first position 1 to id
-                pstmt.setInt(1, id);
-
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    if (rs.next())
-                    {
-                        // set a reference variable we can pass into send Json
-                        CatFact catFact = new CatFact(rs.getInt("id"), rs.getString("fact"));
-
-                        return Optional.of(catFact);
-
-                    } else {
-
-                        return Optional.empty();
-
-                    }
-                }
-
-            } catch (Exception error)
-            {
-                error.printStackTrace();
-            } 
-            return Optional.empty();
-        }
+        //removed getFactById
 
         /** POST /facts */
-        void createFact(HttpExchange exchange) throws IOException {
+        void createFact(HttpExchange exchange) throws IOException, SQLException {
             String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
 
             NewFact input;
@@ -183,42 +117,19 @@ public class App {
                 return;
             }
             String text = input.fact().trim();
-            // if (text.contains("\n") || text.contains("\r")) {
-            //     // One fact per line is how facts.csv is laid out.
-            //     sendJson(exchange, 400, new ErrorBody("\"fact\" must be a single line"));
-            //     return;
-            // }
+            if (text.contains("\n") || text.contains("\r")) {
+                // One fact per line is how facts.csv is laid out.
+                sendJson(exchange, 400, new ErrorBody("\"fact\" must be a single line"));
+                return;
+            }
 
             // start section 6
             System.out.println("Within our createFact method");
 
             CatFact created = database.insertFact(text);
 
-            // String sql = "INSERT INTO facts (fact) VALUES (?) RETURNING id";
-
-            // try (Connection conn = DriverManager.getConnection(DB_URL);
-            //     PreparedStatement pstmt = conn.prepareStatement(sql);) {
-
-            //     // set the fact
-            //     pstmt.setString(1, text);
-
-            //     try (ResultSet rs = pstmt.executeQuery()) {
-            //         if (rs.next())
-            //         {
-            //             int newFactId = rs.getInt("id");
-            //             CatFact newCatFact = new CatFact(newFactId, text);
-
-            //             exchange.getResponseHeaders().set("Location", "/facts/" + newCatFact.id());
-
-            //             sendJson(exchange, 201, newCatFact);
-
-            //         } 
-            //     }
-
-            // } catch (Exception error)
-            // {
-            //     error.printStackTrace();
-            // } 
+            exchange.getResponseHeaders().set("Location", "/facts/" + created.id());
+            sendJson(exchange, 201, created);
 
 
         }

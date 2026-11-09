@@ -10,7 +10,7 @@ import java.util.Optional;
 class FactDatabase {
     
     private final String dbUrl;
-    
+
     FactDatabase(String dbUrl) {
         this.dbUrl = dbUrl;
     }
@@ -23,7 +23,7 @@ class FactDatabase {
 
             String sql = "SELECT id, fact FROM facts ORDER BY id";
             // need to create the connection of pass it into the parameter for getAllFacts?
-            try (Connection conn = DriverManager.getConnection(DB_URL);
+            try (Connection conn = DriverManager.getConnection(dbUrl);
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 ResultSet rs = pstmt.executeQuery()) {
 
@@ -84,4 +84,19 @@ class FactDatabase {
             } 
             return Optional.empty();
         }
+
+        CatFact insertFact(String text) throws SQLException {
+
+        String sql = "INSERT INTO facts (fact) VALUES (?) RETURNING id";
+
+        try (Connection conn = DriverManager.getConnection(dbUrl);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, text);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                rs.next();
+                return new CatFact(rs.getInt("id"), text);
+            }
+        }
+    }
 }
