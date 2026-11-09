@@ -18,15 +18,16 @@ class FactsRouter {
 
     Response route(String method, String path, String body) throws SQLException {
 
-        switch (method) {
-            case "GET"  -> { return new Response(200, database.getAllFacts(), null); }
-            case "POST" -> { return createFact(body); }
-            default     -> { return new Response(405, new ErrorBody("method not allowed"), null); }
+        if (path.equals("/facts") || path.equals("/facts/")) {
+            switch (method) {
+                case "GET"  -> { return new Response(200, database.getAllFacts(), null); }
+                case "POST" -> { return createFact(body); }
+                default     -> { return new Response(405, new ErrorBody("method not allowed"), null); }
+            }
         }
 
         if (!path.startsWith("/facts/")) {
-            sendJson(exchange, 404, new ErrorBody("not found"));
-            return;
+            return new Response(exchange, 404, new ErrorBody("not found"), null);
         }
 
         String idText = path.substring("/facts/".length());
@@ -34,22 +35,21 @@ class FactsRouter {
         try {
                 id = Integer.parseInt(idText);
             } catch (NumberFormatException e) {
-                sendJson(exchange, 400, new ErrorBody("id must be a whole number"));
-                return;
+                return new Response(exchange, 400, new ErrorBody("id must be a whole number"), null);
             }
-        }
 
         if (method.equals("GET")) {
             Optional<CatFact> catFactFound = database.findFactById(id);
 
             if (catFactFound.isPresent()) {
-                sendJson(exchange, 200, catFactFound.get());
+                return new Response(exchange, 200, catFactFound.get(), null);
             } else {
-                sendJson(exchange, 404, new ErrorBody("no fact with id " + id));
+                return new Response(exchange, 404, new ErrorBody("no fact with id " + id), null);
             }
         } else {
-            sendJson(exchange, 405, new ErrorBody("method not allowed"));
+            return new Response(exchange, 405, new ErrorBody("method not allowed"), null);
         }
     }
+
 
 }
