@@ -52,21 +52,21 @@ class FactsRouter {
         }
     }
 
-    Response createFact(String body) throws IOException, SQLException {
+    Response createFact(String body) throws SQLException {
         NewFact input;
 
         try {
                 input = Json.gson.fromJson(body, NewFact.class);
             } catch (JsonParseException e) {
-                return new Response(400, new ErrorBody("body must be JSON like {\"fact\": \"...\"}"));
+                return new Response(400, new ErrorBody("body must be JSON like {\"fact\": \"...\"}"), null);
             }
             if (input == null || input.fact() == null || input.fact().isBlank()) {
-                return new Response(400, new ErrorBody("\"fact\" is required and cannot be blank"));
+                return new Response(400, new ErrorBody("\"fact\" is required and cannot be blank"), null);
             }
             String text = input.fact().trim();
             if (text.contains("\n") || text.contains("\r")) {
                 // One fact per line is how facts.csv is laid out.
-                return new Response(400, new ErrorBody("\"fact\" must be a single line"));
+                return new Response(400, new ErrorBody("\"fact\" must be a single line"), null);
             }
 
             // start section 6
@@ -74,8 +74,7 @@ class FactsRouter {
 
             CatFact created = database.insertFact(text);
 
-            exchange.getResponseHeaders().set("Location", "/facts/" + created.id());
-            sendJson(exchange, 201, created);
+            return new Response(201, created, "fact id created: " + created.id());
 
 
     }
