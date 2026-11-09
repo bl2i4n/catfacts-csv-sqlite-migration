@@ -33,69 +33,72 @@ public class App {
 
     public static void main(String[] args) throws IOException {
 
+        FactDatabase database = new FactDatabase(DB_URL);
+        FactsRouter router = new FactsRouter(database);
+        FactsHandler handler = new FactsHandler(router);
+
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
-        server.createContext("/facts", new FactsHandler());
+        server.createContext("/facts", handler);
         server.start();
         System.out.println("Cat Facts API running on http://localhost:" + PORT + "/facts");
-    }
 
-    static class FactsHandler implements HttpHandler {
+    // static class FactsHandler implements HttpHandler {
 
-        private final FactDatabase database = new FactDatabase(DB_URL);
+    //     private final FactDatabase database = new FactDatabase(DB_URL);
 
-        @Override
-        public void handle(HttpExchange exchange) throws IOException {
-            try {
-                route(exchange);
-            } catch (Exception e) {
-                // Print the real problem in the server terminal, send a clean 500 to the client.
-                e.printStackTrace();
-                sendJson(exchange, 500, new ErrorBody("internal server error"));
-            }
-        }
+    //     @Override
+    //     public void handle(HttpExchange exchange) throws IOException {
+    //         try {
+    //             route(exchange);
+    //         } catch (Exception e) {
+    //             // Print the real problem in the server terminal, send a clean 500 to the client.
+    //             e.printStackTrace();
+    //             sendJson(exchange, 500, new ErrorBody("internal server error"));
+    //         }
+    //     }
 
-        /** Decides which endpoint a request is for. */
-        void route(HttpExchange exchange) throws IOException, SQLException {
-            String method = exchange.getRequestMethod();
-            String path = exchange.getRequestURI().getPath();
+    //     /** Decides which endpoint a request is for. */
+    //     void route(HttpExchange exchange) throws IOException, SQLException {
+    //         String method = exchange.getRequestMethod();
+    //         String path = exchange.getRequestURI().getPath();
 
-            // "/facts" or "/facts/"  ->  returns the whole collection
-            if (path.equals("/facts") || path.equals("/facts/")) {
-                switch (method) {
-                    case "GET"  -> sendJson(exchange, 200, database.getAllFacts());
-                    case "POST" -> createFact(exchange);
-                    default     -> sendJson(exchange, 405, new ErrorBody("method not allowed"));
-                }
-                return;
-            }
+    //         // "/facts" or "/facts/"  ->  returns the whole collection
+    //         if (path.equals("/facts") || path.equals("/facts/")) {
+    //             switch (method) {
+    //                 case "GET"  -> sendJson(exchange, 200, database.getAllFacts());
+    //                 case "POST" -> createFact(exchange);
+    //                 default     -> sendJson(exchange, 405, new ErrorBody("method not allowed"));
+    //             }
+    //             return;
+    //         }
 
-            // Anything else that merely starts with "/facts", like "/factsabc"
-            if (!path.startsWith("/facts/")) {
-                sendJson(exchange, 404, new ErrorBody("not found"));
-                return;
-            }
+    //         // Anything else that merely starts with "/facts", like "/factsabc"
+    //         if (!path.startsWith("/facts/")) {
+    //             sendJson(exchange, 404, new ErrorBody("not found"));
+    //             return;
+    //         }
 
-            // "/facts/{id}"  ->  returns one fact with the provided id
-            String idText = path.substring("/facts/".length());
-            int id;
-            try {
-                id = Integer.parseInt(idText);
-            } catch (NumberFormatException e) {
-                sendJson(exchange, 400, new ErrorBody("id must be a whole number"));
-                return;
-            }
-            if (method.equals("GET")) {
-                Optional<CatFact> catFactFound = database.findFactById(id);
-                if (catFactFound.isPresent()) {
-                    sendJson(exchange, 200, catFactFound.get());
+    //         // "/facts/{id}"  ->  returns one fact with the provided id
+    //         String idText = path.substring("/facts/".length());
+    //         int id;
+    //         try {
+    //             id = Integer.parseInt(idText);
+    //         } catch (NumberFormatException e) {
+    //             sendJson(exchange, 400, new ErrorBody("id must be a whole number"));
+    //             return;
+    //         }
+    //         if (method.equals("GET")) {
+    //             Optional<CatFact> catFactFound = database.findFactById(id);
+    //             if (catFactFound.isPresent()) {
+    //                 sendJson(exchange, 200, catFactFound.get());
 
-                } else {
-                    sendJson(exchange, 404, new ErrorBody("no fact with id " + id));                    
-                }
-            } else {
-                sendJson(exchange, 405, new ErrorBody("method not allowed"));
-            }
-        }
+    //             } else {
+    //                 sendJson(exchange, 404, new ErrorBody("no fact with id " + id));                    
+    //             }
+    //         } else {
+    //             sendJson(exchange, 405, new ErrorBody("method not allowed"));
+    //         }
+    //     }
 
         //removed getAllFacts
 
